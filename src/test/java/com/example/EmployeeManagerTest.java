@@ -4,6 +4,7 @@ import com.example.TestDouble.BankServiceSpy;
 import com.example.TestDouble.EmployeeRepositoryStub;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static com.example.TestUtil.getEmployees;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,6 +17,10 @@ public class EmployeeManagerTest {
     BankServiceSpy bankServiceSpy = new BankServiceSpy();
 
     EmployeeRepositoryStub employeeRepositoryStub = new EmployeeRepositoryStub();
+
+    BankService bankServiceMock = Mockito.mock(BankService.class);
+
+    EmployeeRepository employeeRepositoryMock = Mockito.mock(EmployeeRepository.class);
 
 
     @Test
@@ -48,6 +53,19 @@ public class EmployeeManagerTest {
                 .sum();
 
         assertEquals(expectedSalaryToBePayed, actualSalaryToBePayed,"Expected salary should equal to acutal salary");
+    }
+
+    @Test
+    void shouldPayEmployeeUsingMockito(){
+        List<Employee> employees = getEmployees();
+
+        Mockito.when(employeeRepositoryMock.findAll()).thenReturn(employees);
+
+        EmployeeManager employeeManager = new EmployeeManager(employeeRepositoryMock, bankServiceMock);
+
+        int noOfPayments = employeeManager.payEmployees();
+
+        assertEquals(noOfPayments, employees.size(), "No. of payments should equal to no. of employees");
     }
 
 }
