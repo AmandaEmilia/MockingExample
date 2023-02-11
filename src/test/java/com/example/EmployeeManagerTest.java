@@ -4,6 +4,7 @@ import com.example.TestDouble.BankServiceSpy;
 import com.example.TestDouble.EmployeeRepositoryStub;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 import static com.example.TestUtil.getEmployees;
@@ -60,6 +61,7 @@ public class EmployeeManagerTest {
         List<Employee> employees = getEmployees();
 
         Mockito.when(employeeRepositoryMock.findAll()).thenReturn(employees);
+        Mockito.doNothing().when(bankServiceMock).pay(ArgumentMatchers.isA(String.class),ArgumentMatchers.isA(Double.class));
 
         EmployeeManager employeeManager = new EmployeeManager(employeeRepositoryMock, bankServiceMock);
 
